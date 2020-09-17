@@ -33,7 +33,6 @@ namespace stationary_cost_form
 
             // Validate the row, if it fails then return
             subTotal = 0;
-            salesTax = 0;
 
             if (ValidateRow(description1, quantity1, price1, 
                 out quantity, out priceEach)) return;
@@ -54,7 +53,7 @@ namespace stationary_cost_form
             txtsubTotal.Text = subTotal.ToString();
 
 
-            // Validate the tax rate, if it fails then return
+            // Validate the tax rate, if it is true (returns true when error) then return
             if (ValidateTax(taxBox, out taxRate)) return;
             salesTax = subTotal * taxRate;
 
@@ -127,20 +126,39 @@ namespace stationary_cost_form
             return false;
         }
 
-        // Checking to see if tax rate is valid. If it is not valid return true
+        // Checking to see if tax rate is valid. If it is error return true
         private bool ValidateTax(TextBox taxBox, out decimal taxRate)
         {
             // Assume tax is 0 before parsing user input
             taxRate = 0;
 
-            // Check to see if tax is present by evaluating individual tax box
+            // Check to see if there is a value in the taxbox before evaluating texbox
             if (ValidateIndividualText("Tax", taxBox)) return true;
 
-            // Parse the tax value
-            if (!decimal.TryParse(taxBox.Text, out taxRate))
+            // If the value entered by the user contains a % character, parse the value and divide it by 100
+
+            // Changing tax rate to string and removing %
+            string taxRateString = taxBox.Text;
+            taxRateString = taxRateString.Replace("%", "");
+
+            // Parse the tax rate into tax rate decimal and return true if it is an error (exit statement)
+            if (!decimal.TryParse(taxRateString, out taxRate))
             {
                 DisplayErrorMessage(
-                    "Tax rate is invalid", "Invalid value"
+                    "Invalid tax rate value, tax rate must be in decimal form", "Invalid value"
+                );
+                return true;
+            }
+
+            // If tax box contains a % divide by 100, to convert to decimal
+            if (taxBox.Text.Contains("%")) taxRate /= 100;
+
+
+            // Check to see if the tax value is in a valid range
+            if (taxRate < 0m || taxRate > 0.2m)
+            {
+                DisplayErrorMessage(
+                    "Tax rate must be between 0 and 0.2", "Invalid value"
                 );
                 return true;
             }
