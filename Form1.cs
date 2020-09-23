@@ -38,19 +38,19 @@ namespace stationary_cost_form
                 out quantity, out priceEach)) return;
             extendedPrice = quantity * priceEach;
             if (extendedPrice == 0m) total1.Clear();
-            else total1.Text = extendedPrice.ToString();
+            else total1.Text = extendedPrice.ToString("C");
             subTotal += extendedPrice;
 
             if (ValidateRow(description2, quantity2, price2,
                 out quantity, out priceEach)) return;
             extendedPrice = quantity * priceEach;
             if (extendedPrice == 0m) total2.Clear();
-            else total2.Text = extendedPrice.ToString();
+            else total2.Text = extendedPrice.ToString("C");
             subTotal += extendedPrice;
 
 
             // Updating subtotal textbox
-            txtsubTotal.Text = subTotal.ToString();
+            txtsubTotal.Text = subTotal.ToString("C");
 
 
             // Validate the tax rate, if it is true (returns true when error) then return
@@ -62,7 +62,7 @@ namespace stationary_cost_form
 
             // Displaying and calculating the grand total
             grandTotal = subTotal + salesTax;
-            grandTotalTxt.Text = grandTotal.ToString();
+            grandTotalTxt.Text = grandTotal.ToString("C");
 
 
         }
